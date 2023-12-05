@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>MyIRC chat</title>
+    <link rel="stylesheet" type="text/css" href="../css/chat.css">
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    
+    <div class="sidebar">
+      <form id="pagemain" action="pagemain" method="get">
+        <button>Page Principal</button>
+      </form>
+      <form id="createroom" action="createroom" method="get">
+        <button>create room</button>
+      </form>
+      <form id="changepass" action="changepass" method="get">
+        <button>change password</button>
+      </form>
+      <form id="disco" action="index_co" method="post">
+        <button>Disconnect</button>
+</form>
+      
+    </div>
+  
+    <form id="form" action="">
+      <input id="input" autocomplete="off" />
+      <button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        var form = document.getElementById('form');
+        var input = document.getElementById('input');
+        
+
+        function godisconnect() {
+          console.log('bli')
+          response.redirect("/index_co")
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (input.value) {
+                if (input.value) {
+                    socket.emit('chat message', input.value);
+                    input.value = '';
+                }
+            }
+        });
+        socket.on('chat message', (msg, usersession, rooms) => {
+          console.log('tutu')
+          console.log(msg)
+          console.log(usersession)
+          console.log(rooms)
+          rooms.forEach(element => {
+            console.log(element)
+            console.log(element.user)
+            if (element.user === usersession.id && element.room ===usersession.channel) {
+              var item = document.createElement('li');
+              item.textContent = msg;
+              messages.appendChild(item);
+              window.scrollTo(0, document.body.scrollHeight);
+            }         
+          });
+
+
+        });
+        socket.on('chat historic', function(mssg) {
+            var item = document.createElement('li');
+            item.textContent = mssg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+  </body>
+</html>
