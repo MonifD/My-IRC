@@ -22,4 +22,8 @@ if needed npm install :
 - @types/express-session
 - @types/nodes
 
+Run 
+npm i 
+
+Run npm start to start the server
 => go to localhost:3000/
